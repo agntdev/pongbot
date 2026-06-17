@@ -73,9 +73,12 @@ export function buildBot(token: string) {
     await ctx.reply("Use /ping or /count.");
   });
 
-  bot.on("message:text", async (ctx) => {
-    await ctx.reply("I didn't understand that. Try /start to see what I can do.");
-  });
+  bot.on("message:text").filter(
+    (ctx) => !ctx.msg?.entities?.some((e) => e.type === "bot_command"),
+    async (ctx) => {
+      await ctx.reply("I didn't understand that. Try /start to see what I can do.");
+    },
+  );
 
   bot.catch((err) => {
     console.error(`Error while handling update ${err.ctx.update.update_id}:`, err.error);
