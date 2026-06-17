@@ -1,10 +1,15 @@
-import { createBot, menuKeyboard } from "@agntdev/bot-toolkit";
+import { createBot, menuKeyboard, resolveSessionStorage } from "@agntdev/bot-toolkit";
+import type { StorageAdapter } from "grammy";
 
 // The per-chat session shape (ephemeral conversation state only). Extend as the
 // bot grows. Durable domain data must NOT live here — use the toolkit's
 // persistent storage (see AGENTS.md).
 export interface Session {
   // example: step?: "awaiting_amount";
+}
+
+interface PingCount {
+  count: number;
 }
 
 const mainMenu = menuKeyboard(
@@ -15,6 +20,8 @@ const mainMenu = menuKeyboard(
   1,
 );
 
+const PING_COUNT_KEY = "global:ping_count";
+
 /**
  * buildBot — assembles the bot and registers every handler, but does NOT start
  * it. Shared by the runtime entry (src/index.ts) and the Tests-gate harness
@@ -22,8 +29,19 @@ const mainMenu = menuKeyboard(
  * and flows here.
  */
 export function buildBot(token: string) {
+  const sessionStore = resolveSessionStorage<Session>(undefined);
+  const pingStore: StorageAdapter<PingCount> = sessionStore as unknown as StorageAdapter<PingCount>;
+
   const bot = createBot<Session>(token, {
     initial: () => ({}),
+    storage: sessionStore,
+  });
+
+  bot.command("ping", async (ctx) => {
+    const current = await pingStore.read(PING_COUNT_KEY);
+    const next = (current?.count ?? 0) + 1;
+    await pingStore.write(PING_COUNT_KEY, { count: next });
+    await ctx.reply("pong 🏓");
   });
 
   bot.command("start", async (ctx) => {
@@ -35,12 +53,17 @@ export function buildBot(token: string) {
 
   bot.callbackQuery("cmd:ping", async (ctx) => {
     await ctx.answerCallbackQuery();
+    const current = await pingStore.read(PING_COUNT_KEY);
+    const next = (current?.count ?? 0) + 1;
+    await pingStore.write(PING_COUNT_KEY, { count: next });
     await ctx.reply("pong 🏓");
   });
 
   bot.callbackQuery("cmd:count", async (ctx) => {
     await ctx.answerCallbackQuery();
-    await ctx.reply("Total pings served: 0");
+    const current = await pingStore.read(PING_COUNT_KEY);
+    const count = current?.count ?? 0;
+    await ctx.reply(`Total pings served: ${count}`);
   });
 
   bot.on("message:text", async (ctx) => {
