@@ -36,8 +36,7 @@ export function buildBot(token: string) {
   });
 
   bot.command("count", async (ctx) => {
-    const current = await pingStore.read(PING_COUNT_KEY);
-    const count = current?.count ?? 0;
+    const count = await getCount();
     await ctx.reply(`Total pings served: ${count}`);
   });
 
