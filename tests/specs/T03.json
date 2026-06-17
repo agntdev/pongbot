@@ -24,7 +24,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Unknown command. Try /help to see the available commands."
+              "text": "Use /ping or /count."
             }
           }
         ]

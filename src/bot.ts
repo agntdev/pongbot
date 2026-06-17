@@ -76,7 +76,7 @@ export function buildBot(token: string) {
   });
 
   bot.on(":entities:bot_command", async (ctx) => {
-    await ctx.reply("Unknown command. Try /help to see the available commands.");
+    await ctx.reply("Use /ping or /count.");
   });
 
   bot.on("message:text", async (ctx) => {
