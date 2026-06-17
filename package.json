@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "@agntdev/bot-toolkit": "file:./vendor/bot-toolkit",
-    "grammy": "^1.30.0"
+    "grammy": "^1.30.0",
+    "sql.js": "^1.14.1"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@types/sql.js": "^1.4.11",
     "typescript": "^5.6.0"
   }
 }
