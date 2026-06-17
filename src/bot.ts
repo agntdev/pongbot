@@ -66,8 +66,26 @@ export function buildBot(token: string) {
     await ctx.reply(`Total pings served: ${count}`);
   });
 
+  bot.command("help", async (ctx) => {
+    await ctx.reply(
+      "Available commands:\n" +
+        "/start - Welcome message and main menu\n" +
+        "/ping - Get a pong 🏓 and increment the global counter\n" +
+        "/help - Show this help message",
+    );
+  });
+
+  bot.on(":entities:bot_command", async (ctx) => {
+    await ctx.reply("Unknown command. Try /help to see the available commands.");
+  });
+
   bot.on("message:text", async (ctx) => {
     await ctx.reply("I didn't understand that. Try /start to see what I can do.");
+  });
+
+  bot.catch((err) => {
+    console.error(`Error while handling update ${err.ctx.update.update_id}:`, err.error);
+    err.ctx.reply("Sorry, something went wrong. Please try again later.").catch(() => {});
   });
 
   return bot;
