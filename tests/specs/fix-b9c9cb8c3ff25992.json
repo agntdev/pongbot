@@ -1,0 +1,13 @@
+[
+  {
+    "name": "/count returns zero when no pings have been served",
+    "steps": [
+      {
+        "send": { "text": "/count" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Total pings served: 0" } }
+        ]
+      }
+    ]
+  }
+]
