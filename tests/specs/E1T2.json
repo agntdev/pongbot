@@ -1,0 +1,19 @@
+[
+  {
+    "name": "/count replies with total pings served",
+    "steps": [
+      {
+        "send": { "text": "/ping" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "pong 🏓" } }
+        ]
+      },
+      {
+        "send": { "text": "/count" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Total pings served: 1" } }
+        ]
+      }
+    ]
+  }
+]

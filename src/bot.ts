@@ -44,6 +44,12 @@ export function buildBot(token: string) {
     await ctx.reply("pong 🏓");
   });
 
+  bot.command("count", async (ctx) => {
+    const current = await pingStore.read(PING_COUNT_KEY);
+    const count = current?.count ?? 0;
+    await ctx.reply(`Total pings served: ${count}`);
+  });
+
   bot.command("start", async (ctx) => {
     await ctx.reply(
       "Hi — I'm PongBot! Send /ping to get a pong 🏓 and increment the global counter.",
