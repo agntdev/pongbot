@@ -1,0 +1,24 @@
+[
+  {
+    "name": "/start replies with a welcome and main menu",
+    "steps": [
+      {
+        "send": { "text": "/start" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Hi — I'm PongBot! Send /ping to get a pong 🏓 and increment the global counter.",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [{ "text": "🏓 Ping", "callback_data": "cmd:ping" }],
+                  [{ "text": "📊 Count", "callback_data": "cmd:count" }]
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

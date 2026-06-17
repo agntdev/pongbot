@@ -1,4 +1,4 @@
-import { createBot } from "@agntdev/bot-toolkit";
+import { createBot, menuKeyboard } from "@agntdev/bot-toolkit";
 
 // The per-chat session shape (ephemeral conversation state only). Extend as the
 // bot grows. Durable domain data must NOT live here — use the toolkit's
@@ -6,6 +6,14 @@ import { createBot } from "@agntdev/bot-toolkit";
 export interface Session {
   // example: step?: "awaiting_amount";
 }
+
+const mainMenu = menuKeyboard(
+  [
+    { text: "🏓 Ping", data: "cmd:ping" },
+    { text: "📊 Count", data: "cmd:count" },
+  ],
+  1,
+);
 
 /**
  * buildBot — assembles the bot and registers every handler, but does NOT start
@@ -19,7 +27,20 @@ export function buildBot(token: string) {
   });
 
   bot.command("start", async (ctx) => {
-    await ctx.reply("Welcome! I am ready to help.");
+    await ctx.reply(
+      "Hi — I'm PongBot! Send /ping to get a pong 🏓 and increment the global counter.",
+      { reply_markup: mainMenu },
+    );
+  });
+
+  bot.callbackQuery("cmd:ping", async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await ctx.reply("pong 🏓");
+  });
+
+  bot.callbackQuery("cmd:count", async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await ctx.reply("Total pings served: 0");
   });
 
   bot.on("message:text", async (ctx) => {
