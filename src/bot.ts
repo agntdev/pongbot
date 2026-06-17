@@ -64,6 +64,7 @@ export function buildBot(token: string) {
       "Available commands:\n" +
         "/start - Welcome message and main menu\n" +
         "/ping - Get a pong 🏓 and increment the global counter\n" +
+        "/count - Show the total number of pings served\n" +
         "/help - Show this help message",
     );
   });
